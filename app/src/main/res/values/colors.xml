@@ -8,6 +8,8 @@
     <color name="button_focused">#F5F5F5</color>
     <color name="button_default">#FFFFFF</color>
 
+    <color name="no_color">#00FFFFFF</color>
+
     <color name="white">#FFFFFF</color>
     <color name="ivory">#FFFFF0</color>
     <color name="light_yellow">#FFFFE0</color>

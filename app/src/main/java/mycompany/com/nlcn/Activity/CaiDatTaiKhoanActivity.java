@@ -46,14 +46,10 @@ import retrofit2.Response;
 public class CaiDatTaiKhoanActivity extends AppCompatActivity {
 
     private final int HO_TEN = 1;
-    private final int NGAY_SINH = 2;
-    private final int GIOI_TINH = 3;
-    private final int SDT = 4;
-    private final int DIA_CHI = 5;
     private final int ANH_DAI_DIEN = 6;
 
     private CircleImageView mImgAnhDaiDien;
-    private Button mBtnHoTen, mBtnDoiMK, mBtnNamSinh, mBtnGioiTinh, mBtnSDT, mBtnDiaChi;
+    private Button mBtnHoTen;
 
     private String mUsername;
     private String mToken;
@@ -80,11 +76,6 @@ public class CaiDatTaiKhoanActivity extends AppCompatActivity {
 
         mImgAnhDaiDien = (CircleImageView) findViewById(R.id.img_anhdaidien);
         mBtnHoTen = (Button) findViewById(R.id.btn_td_hoten);
-        mBtnDoiMK = (Button) findViewById(R.id.btn_td_matkhau);
-        mBtnNamSinh = (Button) findViewById(R.id.btn_td_namsinh);
-        mBtnGioiTinh = (Button) findViewById(R.id.btn_td_gioitinh);
-        mBtnSDT = (Button) findViewById(R.id.btn_td_sdt);
-        mBtnDiaChi = (Button) findViewById(R.id.btn_td_diachi);
 
         mToken = SharedPreferencesHandler.getString(this, Constant.TOKEN);
         mUsername = SharedPreferencesHandler.getString(this, Constant.USER_NAME);
@@ -110,40 +101,6 @@ public class CaiDatTaiKhoanActivity extends AppCompatActivity {
             }
         });
 
-        mBtnDoiMK.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                doiMatKhau();
-            }
-        });
-
-        mBtnNamSinh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                doiNamSinh();
-            }
-        });
-
-        mBtnGioiTinh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                doiGioiTinh(mBtnGioiTinh.getText().toString());
-            }
-        });
-
-        mBtnSDT.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                doiSDT(mBtnSDT.getText().toString());
-            }
-        });
-
-        mBtnDiaChi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                doiDiaChi(mBtnDiaChi.getText().toString());
-            }
-        });
     }
 
     private void doiHoTen(String oldFullName) {
@@ -170,141 +127,6 @@ public class CaiDatTaiKhoanActivity extends AppCompatActivity {
 
     }
 
-    private void doiMatKhau() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = this.getLayoutInflater();
-
-        //Tham chieu layout
-        final View dialogView = inflater.inflate(R.layout.dialog_doi_matkhau, null);
-        dialogBuilder.setView(dialogView);
-
-        final EditText mEdtMatKhauCu = (EditText) dialogView.findViewById(R.id.edt_mk_cu);
-        final EditText mEdtMatKhau = (EditText) dialogView.findViewById(R.id.edt_mk);
-        final EditText mEdtNhapLaiMK = (EditText) dialogView.findViewById(R.id.edt_nhaplaimk);
-
-        dialogBuilder.setTitle("Đổi mật khẩu");
-        dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                mEdtMatKhau.getText().toString();
-                if (TextUtils.equals(mEdtMatKhau.getText().toString(), mEdtNhapLaiMK.getText().toString())) {
-                    changePassWd(mEdtMatKhauCu.getText().toString(), mEdtNhapLaiMK.getText().toString());
-                } else mEdtNhapLaiMK.setError("Mật khẩu mới chưa khớp");
-            }
-        });
-        dialogBuilder.setNegativeButton("Cancel", null);
-        AlertDialog b = dialogBuilder.create();
-        b.show();
-
-    }
-
-    private void doiNamSinh() {
-
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = this.getLayoutInflater();
-
-        //Tham chieu layout
-        final View dialogView = inflater.inflate(R.layout.dialog_datepicker, null);
-        dialogBuilder.setView(dialogView);
-
-        final DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.date_picker);
-
-        dialogBuilder.setTitle("Đổi năm sinh");
-        dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-//                mBtnNamSinh.setText(datePicker.getDayOfMonth() + "-" + datePicker.getMonth() + "-" + datePicker.getYear());
-                updateUser(NGAY_SINH, datePicker.getDayOfMonth() + "/" + datePicker.getMonth() + "/" + datePicker.getYear());
-
-            }
-        });
-        dialogBuilder.setNegativeButton("Cancel", null);
-        AlertDialog b = dialogBuilder.create();
-        b.show();
-    }
-
-    private void doiGioiTinh(String oldSex) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = this.getLayoutInflater();
-
-        //Tham chieu layout
-        final View dialogView = inflater.inflate(R.layout.dialog_doi_gioitinh, null);
-        dialogBuilder.setView(dialogView);
-
-        String sex[] = {
-                "Nam",
-                "Nữ",
-                "Khác"};
-        final Spinner spinGioiTinh = (Spinner) dialogView.findViewById(R.id.spinner_gioitinh);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, sex);
-        adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
-        spinGioiTinh.setAdapter(adapter);
-
-        for (int i = 0; i < 3; i++) {
-            if (sex[i].equals(oldSex)) {
-                spinGioiTinh.setSelection(i);
-            }
-        }
-
-        dialogBuilder.setTitle("Giới tính");
-        dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                updateUser(GIOI_TINH, spinGioiTinh.getSelectedItem().toString());
-            }
-        });
-        dialogBuilder.setNegativeButton("Cancel", null);
-        AlertDialog b = dialogBuilder.create();
-        b.show();
-    }
-
-    private void doiSDT(String oldTel) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = this.getLayoutInflater();
-
-        //Tham chieu layout
-        final View dialogView = inflater.inflate(R.layout.dialog_doi_sdt, null);
-        dialogBuilder.setView(dialogView);
-
-        final EditText mEdtSDT = (EditText) dialogView.findViewById(R.id.edt_sdt);
-        mEdtSDT.setText(oldTel);
-
-        dialogBuilder.setTitle("Đổi Số điện thoại");
-        dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                updateUser(SDT, mEdtSDT.getText().toString());
-            }
-        });
-
-
-        dialogBuilder.setNegativeButton("Cancel", null);
-        AlertDialog b = dialogBuilder.create();
-        b.show();
-
-    }
-
-    private void doiDiaChi(String oldAddress) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = this.getLayoutInflater();
-
-        //Tham chieu layout
-        final View dialogView = inflater.inflate(R.layout.dialog_doi_diachi, null);
-        dialogBuilder.setView(dialogView);
-
-        final EditText mEdtAddress = (EditText) dialogView.findViewById(R.id.edt_diachi);
-        mEdtAddress.setText(oldAddress);
-
-        dialogBuilder.setTitle("Đổi địa chỉ");
-        dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                updateUser(DIA_CHI, mEdtAddress.getText().toString());
-            }
-        });
-
-
-        dialogBuilder.setNegativeButton("Cancel", null);
-        AlertDialog b = dialogBuilder.create();
-        b.show();
-
-    }
-
     //Data
     private void loadData() {
 
@@ -321,12 +143,7 @@ public class CaiDatTaiKhoanActivity extends AppCompatActivity {
                             .centerCrop()
                             .into(mImgAnhDaiDien);
                     mBtnHoTen.setText(userAcc.getName());
-                    mBtnDiaChi.setText(userAcc.getDiachi());
-                    mBtnSDT.setText(userAcc.getSdt());
-                    if (userAcc.getNamsinh() != null)
-                        mBtnNamSinh.setText(userAcc.getNamsinh());
-                    if (userAcc.getGioitinh() != null)
-                        mBtnGioiTinh.setText(userAcc.getGioitinh());
+
                 }
                 if (response.code() == 400) {
                     try {
@@ -361,28 +178,9 @@ public class CaiDatTaiKhoanActivity extends AppCompatActivity {
                     finish();
                 }
 
-                if (response.isSuccessful() && response.code() == 200) {
-                    viewSucc(mBtnDiaChi, response.body().getMessage());
-                    switch (type) {
-                        case HO_TEN:
-                            mBtnHoTen.setText(data);
-                            break;
-                        case SDT:
-                            mBtnSDT.setText(data);
-                            break;
-                        case DIA_CHI:
-                            mBtnDiaChi.setText(data);
-                            break;
-                        case NGAY_SINH:
-                            mBtnNamSinh.setText(data);
-                            break;
-                        case GIOI_TINH:
-                            mBtnGioiTinh.setText(data);
-                            break;
-                    }
 
 
-                }
+
                 if (response.isSuccessful() && response.code() == 400) {
                     try {
                         viewErr(response.errorBody().string());
@@ -405,36 +203,6 @@ public class CaiDatTaiKhoanActivity extends AppCompatActivity {
 
     }
 
-    private void changePassWd(String oldPass, String newConfirmPass) {
-        ConnectServer.getInstance(this).getApi().capNhatMatKhau(mToken, mUsername, oldPass, newConfirmPass).enqueue(new Callback<Message>() {
-            @Override
-            public void onResponse(Call<Message> call, Response<Message> response) {
-
-                if (response.code() == 401) {
-                    Intent intent = new Intent(getBaseContext(), LoginActivity.class);
-                    intent.putExtra("message", "Phiên làm việc hết hạn \nVui lòng đăng nhập lại");
-                    startActivity(intent);
-                    finish();
-                }
-
-                if (response.isSuccessful() && response.code() == 200) {
-                    viewSucc(mBtnDiaChi, response.body().getMessage());
-                } else if (response.isSuccessful() && response.code() == 400) {
-                    try {
-                        viewErr(response.errorBody().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Message> call, Throwable t) {
-                viewErr("Không thể kết nối đến máy chủ");
-            }
-        });
-
-    }
 
     private void viewErr(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
@@ -534,7 +302,7 @@ public class CaiDatTaiKhoanActivity extends AppCompatActivity {
                             .fit()
                             .centerCrop()
                             .into(mImgAnhDaiDien);
-                    viewSucc(mBtnDiaChi, "Đã cập nhật ảnh đại diện thành công");
+                    viewSucc(mBtnHoTen, "Đã cập nhật ảnh đại diện thành công");
                 }
                 if (response.code() == 400) {
                     viewErr("Lỗi !  Chưa cập nhập ảnh đại diện");
