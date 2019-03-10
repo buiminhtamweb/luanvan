@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/AlertDialog.AppCompat.Light"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -48,29 +49,16 @@
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toBottomOf="@id/textView_tensp" />
 
-        <TextView
-            android:id="@+id/textView_sanluong"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-
-            android:text="Tồn kho:"
-            app:layout_constraintEnd_toStartOf="@+id/imageButton"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@id/textView_giasp" />
-
 
         <TextView
             android:id="@+id/textView_sanluongmua"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Sản lượng mua:"
+            android:text="Số lượng mua:"
             app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@+id/textView_sanluong" />
+            app:layout_constraintTop_toBottomOf="@+id/textView_giasp" />
 
         <EditText
             android:id="@+id/edt_sanluongmua"
@@ -85,16 +73,7 @@
             android:textIsSelectable="true"
             android:textSize="15sp"
             app:layout_constraintStart_toEndOf="@+id/textView_sanluongmua"
-            app:layout_constraintTop_toBottomOf="@+id/textView_sanluong" />
-
-        <TextView
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            android:text="Gam"
-            app:layout_constraintStart_toEndOf="@+id/edt_sanluongmua"
-            app:layout_constraintTop_toBottomOf="@+id/textView_sanluong" />
+            app:layout_constraintTop_toBottomOf="@+id/textView_giasp" />
 
         <ImageButton
             android:background="@color/white"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="mycompany.com.nlcn">
+    package="mycompany.com.luanvan">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -8,22 +8,22 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/logoapp"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/logoapp"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="mycompany.com.luanvan.MainActivity"
             android:label="@string/app_name">
 
         </activity>
 
-        <activity android:name=".Activity.ChiTietSPActivity">
+        <activity android:name="mycompany.com.luanvan.Activity.ChiTietSPActivity">
 
         </activity>
 
-        <activity android:name=".Activity.LoginActivity">
+        <activity android:name="mycompany.com.luanvan.Activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,19 +32,19 @@
         </activity>
 
 
-        <activity android:name=".Activity.DonHangDangXyLyActivity">
+        <activity android:name="mycompany.com.luanvan.Activity.DonHangDangXyLyActivity">
 
         </activity>
 
-        <activity android:name=".Activity.CaiDatTaiKhoanActivity">
+        <activity android:name="mycompany.com.luanvan.Activity.CaiDatTaiKhoanActivity">
 
         </activity>
 
-        <activity android:name=".Activity.LichSuDatHangActivity">
+        <activity android:name="mycompany.com.luanvan.Activity.LichSuDatHangActivity">
 
         </activity>
 
-        <activity android:name=".Activity.TimKiemActivity">
+        <activity android:name="mycompany.com.luanvan.Activity.TimKiemActivity">
 
         </activity>
 
