@@ -22,32 +22,32 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import mycompany.com.luanvan.Activity.BeginActivity;
 import mycompany.com.luanvan.Activity.ChiTietSPActivity;
-import mycompany.com.luanvan.Activity.LoginActivity;
 import mycompany.com.luanvan.Activity.TimKiemActivity;
-import mycompany.com.luanvan.Adapter.SanPhamRecyclerViewAdapter;
+import mycompany.com.luanvan.Adapter.MonAnRecyclerViewAdapter;
 import mycompany.com.luanvan.Constant;
 import mycompany.com.luanvan.Data.API;
 import mycompany.com.luanvan.Data.ConnectServer;
 import mycompany.com.luanvan.MainActivity;
 import mycompany.com.luanvan.Model.DataMonAn;
-import mycompany.com.luanvan.Model.ItemMonAn;
 import mycompany.com.luanvan.Model.Message;
+import mycompany.com.luanvan.Model.MonAn;
 import mycompany.com.luanvan.R;
 import mycompany.com.luanvan.utils.SharedPreferencesHandler;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeFrag extends Fragment implements SanPhamRecyclerViewAdapter.onScrollListener, SanPhamRecyclerViewAdapter.onClickListener {
+public class HomeFrag extends Fragment implements MonAnRecyclerViewAdapter.onScrollListener, MonAnRecyclerViewAdapter.onClickListener {
     private RecyclerView mRecyclerView;
-    private SanPhamRecyclerViewAdapter mSanPhamRecyclerViewAdapter;
-    private List<ItemMonAn> mSanPhams = new ArrayList<>();
+    private MonAnRecyclerViewAdapter mMonAnRecyclerViewAdapter;
+    private List<MonAn> mSanPhams = new ArrayList<>();
     private int mPageCurrent;
     private int mNumPage;
     private API mApi;
     private AlertDialog mAlertDialog;
-    private String mToken;
+    private int sttBanAn;
     private TextView mTvSearch;
 
     @Nullable
@@ -57,7 +57,7 @@ public class HomeFrag extends Fragment implements SanPhamRecyclerViewAdapter.onS
 
         initView(v);
 
-        mToken = SharedPreferencesHandler.getString(getActivity(), Constant.TOKEN);
+        sttBanAn = SharedPreferencesHandler.getInt(getActivity(), Constant.SO_BAN);
         mApi = ConnectServer.getInstance(getContext()).getApi();
 
 //        layDSSanPham(1);
@@ -76,13 +76,13 @@ public class HomeFrag extends Fragment implements SanPhamRecyclerViewAdapter.onS
 
         mRecyclerView = v.findViewById(R.id.recyclerview);
 
-        mSanPhamRecyclerViewAdapter = new SanPhamRecyclerViewAdapter(getContext(), mSanPhams);
-        mSanPhamRecyclerViewAdapter.setOnScrollListener(this);
-        mSanPhamRecyclerViewAdapter.setOnClickListener(this);
+        mMonAnRecyclerViewAdapter = new MonAnRecyclerViewAdapter(getContext(), mSanPhams);
+        mMonAnRecyclerViewAdapter.setOnScrollListener(this);
+        mMonAnRecyclerViewAdapter.setOnClickListener(this);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(mSanPhamRecyclerViewAdapter);
+        mRecyclerView.setAdapter(mMonAnRecyclerViewAdapter);
     }
 
     private void layDSSanPham(int page) {
@@ -97,11 +97,11 @@ public class HomeFrag extends Fragment implements SanPhamRecyclerViewAdapter.onS
                     mPageCurrent = Integer.parseInt(response.body().getPage());
                     mNumPage = response.body().getNumpages();
 
-                    for (ItemMonAn sp : response.body().getItemMonAns()) {
+                    for (MonAn sp : response.body().getItemMonAns()) {
                         if (sp.getId() != null) mSanPhams.add(sp);
 
                     }
-                    mSanPhamRecyclerViewAdapter.notifyDataSetChanged();
+                    mMonAnRecyclerViewAdapter.notifyDataSetChanged();
                     Log.e("HOME_FRAG", "onResponse: layDSSanPham Succ");
                 }
                 if (response.code() == 400) {
@@ -149,7 +149,7 @@ public class HomeFrag extends Fragment implements SanPhamRecyclerViewAdapter.onS
     private void themVaoGioHang(final String mIdSP) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = this.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_them_san_luong_sp, null);
+        View dialogView = inflater.inflate(R.layout.dialog_them_so_luong_monan, null);
         Button btnXacNhan = dialogView.findViewById(R.id.btn_xacnhan);
         Button btnHuy = dialogView.findViewById(R.id.btn_huy);
         final EditText edtSanLuong = dialogView.findViewById(R.id.edt_sanluongmua);
@@ -168,14 +168,14 @@ public class HomeFrag extends Fragment implements SanPhamRecyclerViewAdapter.onS
                 int sanLuongMua = Integer.parseInt(edtSanLuong.getText().toString());
                 ConnectServer.getInstance(getActivity())
                         .getApi()
-                        .themSPVaoGioHang(mToken, mIdSP, sanLuongMua)
+                        .themMonAn(sttBanAn, mIdSP, sanLuongMua)
                         .enqueue(new Callback<Message>() {
                             @Override
                             public void onResponse(Call<Message> call, Response<Message> response) {
                                 mAlertDialog.dismiss();
                                 try {
                                     if (response.code() == 401) {
-                                        Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                        Intent intent = new Intent(getActivity(), BeginActivity.class);
                                         intent.putExtra("message", "Phiên làm việc hết hạn \n Vui lòng đăng nhập lại");
                                         startActivity(intent);
                                         getActivity().finish();

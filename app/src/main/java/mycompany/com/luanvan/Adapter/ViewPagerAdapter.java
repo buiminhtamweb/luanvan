@@ -7,21 +7,21 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import mycompany.com.luanvan.Fragment.GoiMonFrag;
 import mycompany.com.luanvan.Fragment.HomeFrag;
-import mycompany.com.luanvan.Fragment.HoaDonFrag;
+import mycompany.com.luanvan.Fragment.ThanhToanFrag;
 
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     private HomeFrag mHomeFrag;
     private GoiMonFrag mGoiMonFrag;
-    private HoaDonFrag mHoaDonFrag;
+    private ThanhToanFrag mThanhToanFrag;
     private String[] mTitle;
 
-    public ViewPagerAdapter(FragmentManager fm, HomeFrag mHomeFrag, GoiMonFrag mGoiMonFrag, HoaDonFrag mHoaDonFrag) {
+    public ViewPagerAdapter(FragmentManager fm, HomeFrag mHomeFrag, GoiMonFrag mGoiMonFrag, ThanhToanFrag mThanhToanFrag) {
         super(fm);
         this.mHomeFrag = mHomeFrag;
         this.mGoiMonFrag = mGoiMonFrag;
-        this.mHoaDonFrag = mHoaDonFrag;
+        this.mThanhToanFrag = mThanhToanFrag;
 
 
         mTitle = new String[]{"Trang chủ", "Đặt hàng", "Tài khoản"};
@@ -35,7 +35,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             case 1:
                 return mGoiMonFrag;
             case 2:
-                return mHoaDonFrag;
+                return mThanhToanFrag;
             default:
                 return null;
         }

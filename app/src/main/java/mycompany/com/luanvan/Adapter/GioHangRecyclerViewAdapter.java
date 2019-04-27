@@ -35,7 +35,7 @@ public class GioHangRecyclerViewAdapter extends RecyclerView.Adapter<GioHangRecy
     @Override
     public GioHangRecyclerViewAdapter.Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_sanpham_giohang, parent, false);
+                .inflate(R.layout.item_monan_goimon, parent, false);
 
         return new Holder(itemView);
     }
@@ -43,11 +43,11 @@ public class GioHangRecyclerViewAdapter extends RecyclerView.Adapter<GioHangRecy
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
 
-        Picasso.get().load(Constant.URL_SERVER + mGioHang.get(position).getImgurl()).fit().centerCrop().into(holder.imageView);
-        holder.nameAgri.setText(mGioHang.get(position).getTensp());
-        holder.price.setText("Giá: " + Number.convertNumber(mGioHang.get(position).getGiasp()) + " VND");
+        Picasso.get().load(Constant.URL_IMG + mGioHang.get(position).getImgurl()).fit().centerCrop().into(holder.imageView);
+        holder.nameAgri.setText(mGioHang.get(position).getTenMA());
+        holder.price.setText("Giá: " + Number.convertNumber(mGioHang.get(position).getGiaMA()) + " VND");
 //        holder.sanLuong.setText("Tồn kho: " + Number.convertNumber(mGioHang.get(position).getSanluong()) + " Gam");
-        holder.soLuongMua.setText("" + mGioHang.get(position).getSanLuongMua());
+        holder.soLuongMua.setText("" + mGioHang.get(position).getSoLuongMua());
     }
 
     @Override
@@ -62,7 +62,7 @@ public class GioHangRecyclerViewAdapter extends RecyclerView.Adapter<GioHangRecy
     public int getTongTien() {
         int tongtien = 0;
         for (int i = 0; i < mGioHang.size(); i++) {
-            tongtien += (mGioHang.get(i).getGiasp() * mGioHang.get(i).getSanLuongMua() / 1000);
+            tongtien += (mGioHang.get(i).getGiaMA() * mGioHang.get(i).getSoLuongMua());
         }
         return tongtien;
     }
@@ -98,7 +98,7 @@ public class GioHangRecyclerViewAdapter extends RecyclerView.Adapter<GioHangRecy
                 public void onClick(View view) {
                     int position = getAdapterPosition();
                     Log.e("DELETE", "onClick: ");
-                    onClickListener.onItemDeleteClick(position, mGioHang.get(position).getIdSpMua());
+                    onClickListener.onItemDeleteClick(position, mGioHang.get(position).getIdMonAn());
                 }
             });
 
@@ -108,16 +108,16 @@ public class GioHangRecyclerViewAdapter extends RecyclerView.Adapter<GioHangRecy
                 public void onClick(View view) {
                     int position = getAdapterPosition();
                     onClickListener.onEditTextClick(position,
-                            mGioHang.get(position).getIdSpMua(),
-                            mGioHang.get(position).getTensp(),
-                            mGioHang.get(position).getSanLuongMua());
+                            mGioHang.get(position).getIdMonAn(),
+                            mGioHang.get(position).getTenMA(),
+                            mGioHang.get(position).getSoLuongMua());
                 }
             });
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickListener.onItemClick(getAdapterPosition(), mGioHang.get(getAdapterPosition()).getIdSpMua());
+                    onClickListener.onItemClick(getAdapterPosition(), mGioHang.get(getAdapterPosition()).getIdMonAn());
                 }
             });
         }

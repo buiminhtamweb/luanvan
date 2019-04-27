@@ -6,22 +6,22 @@ import com.google.gson.annotations.SerializedName;
 
 public class SpMua {
 
-    @SerializedName("idSpMua")
+    @SerializedName("idMonAn")
     @Expose
-    private String idSpMua;
+    private String idMonAn;
     @SerializedName("giaMua")
     @Expose
     private Integer giaMua;
-    @SerializedName("sanLuongMua")
+    @SerializedName("soLuongMua")
     @Expose
-    private Integer sanLuongMua;
+    private Integer soLuongMua;
 
-    public String getIdSpMua() {
-        return idSpMua;
+    public String getIdMonAn() {
+        return idMonAn;
     }
 
-    public void setIdSpMua(String idSpMua) {
-        this.idSpMua = idSpMua;
+    public void setIdMonAn(String idMonAn) {
+        this.idMonAn = idMonAn;
     }
 
     public Integer getGiaMua() {
@@ -32,12 +32,12 @@ public class SpMua {
         this.giaMua = giaMua;
     }
 
-    public Integer getSanLuongMua() {
-        return sanLuongMua;
+    public Integer getSoLuongMua() {
+        return soLuongMua;
     }
 
-    public void setSanLuongMua(Integer sanLuongMua) {
-        this.sanLuongMua = sanLuongMua;
+    public void setSoLuongMua(Integer soLuongMua) {
+        this.soLuongMua = soLuongMua;
     }
 
 }

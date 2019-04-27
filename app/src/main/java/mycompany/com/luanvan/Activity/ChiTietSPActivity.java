@@ -38,18 +38,18 @@ public class ChiTietSPActivity extends AppCompatActivity {
     private TextView mTenSanPham, mGiaSanPham, mSanLuongSP, mChiTietSP;
     private AlertDialog alertDialog = null;
     private AlertDialog mAlertDialog;
-    private String mToken;
+    private int sttBanAn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chi_tiet_sp);
+        setContentView(R.layout.activity_chi_tiet_monan);
 
         Intent intent = getIntent();
         if (null != intent) {
             mIdSP = intent.getExtras().getString("idSP", "");
         } else finish();
-        mToken = SharedPreferencesHandler.getString(getBaseContext(), Constant.TOKEN);
+        sttBanAn = SharedPreferencesHandler.getInt(getBaseContext(), Constant.SO_BAN);
         idNguoiDung = SharedPreferencesHandler.getString(this, "id");
 
         mImageView = (ImageView) findViewById(R.id.img_agri);
@@ -77,9 +77,9 @@ public class ChiTietSPActivity extends AppCompatActivity {
 
                 if (response.code() == 200 && null != response.body()) {
                     ChiTietMonAn chiTietMonAn = response.body();
-                    Picasso.get().load(Constant.URL_SERVER + chiTietMonAn.getImgurl()).fit().centerCrop().into(mImageView);
-                    mTenSanPham.setText(chiTietMonAn.getTensp());
-                    mGiaSanPham.setText("Giá: " + chiTietMonAn.getGiasp().toString());
+                    Picasso.get().load(Constant.URL_IMG + chiTietMonAn.getImgurl()).fit().centerCrop().into(mImageView);
+                    mTenSanPham.setText(chiTietMonAn.getTenMA());
+                    mGiaSanPham.setText("Giá: " + chiTietMonAn.getGiaMA().toString());
 //                    mSanLuongSP.setText("Tồn kho: " + chiTietMonAn.getSanluong().toString());
                     mChiTietSP.setText(chiTietMonAn.getChitietsp().toString());
                 }
@@ -133,7 +133,7 @@ public class ChiTietSPActivity extends AppCompatActivity {
     public void themVaoGioHang(View view) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_them_san_luong_sp, null);
+        View dialogView = inflater.inflate(R.layout.dialog_them_so_luong_monan, null);
         Button btnXacNhan = dialogView.findViewById(R.id.btn_xacnhan);
         Button btnHuy = dialogView.findViewById(R.id.btn_huy);
         final EditText edtSanLuong = dialogView.findViewById(R.id.edt_sanluongmua);
@@ -151,14 +151,14 @@ public class ChiTietSPActivity extends AppCompatActivity {
 
                 int sanLuongMua = Integer.parseInt(edtSanLuong.getText().toString());
 
-                ConnectServer.getInstance(getApplicationContext()).getApi().themSPVaoGioHang(mToken, mIdSP, sanLuongMua)
+                ConnectServer.getInstance(getApplicationContext()).getApi().themMonAn(sttBanAn, mIdSP, sanLuongMua)
                         .enqueue(new Callback<Message>() {
                             @Override
                             public void onResponse(Call<Message> call, Response<Message> response) {
                                 mAlertDialog.dismiss();
                                 try {
                                     if (response.code() == 401) {
-                                        Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+                                        Intent intent = new Intent(getBaseContext(), BeginActivity.class);
                                         intent.putExtra("message", "Phiên làm việc hết hạn \n Vui lòng đăng nhập lại");
                                         startActivity(intent);
                                         finish();

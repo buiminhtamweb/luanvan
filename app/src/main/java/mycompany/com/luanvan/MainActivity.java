@@ -12,9 +12,10 @@ import android.view.MenuItem;
 
 import mycompany.com.luanvan.Adapter.ViewPagerAdapter;
 import mycompany.com.luanvan.Data.ConnectServer;
+import mycompany.com.luanvan.Data.ConnectSocketIO;
 import mycompany.com.luanvan.Fragment.GoiMonFrag;
 import mycompany.com.luanvan.Fragment.HomeFrag;
-import mycompany.com.luanvan.Fragment.HoaDonFrag;
+import mycompany.com.luanvan.Fragment.ThanhToanFrag;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
         ViewPager.OnPageChangeListener {
@@ -27,27 +28,30 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private HomeFrag mHomeFrag;
     private GoiMonFrag mGoiMonFrag;
-    private HoaDonFrag mHoaDonFrag;
+    private ThanhToanFrag mThanhToanFrag;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        Intent intent = new Intent(this, SocketIO.class);
+//        startService(intent);
 
+        ConnectSocketIO.getInstance(this);
         //
 //        mToolbar = findViewById(R.id.toolbar);
 //        mToolbar.setTitle("Trang chủ");
 
         mHomeFrag = new HomeFrag();
         mGoiMonFrag = new GoiMonFrag();
-        mHoaDonFrag = new HoaDonFrag();
+        mThanhToanFrag = new ThanhToanFrag();
 
         mBottomNavigation = (BottomNavigationView) findViewById(R.id.navigation);
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
 
         mBottomNavigation.setOnNavigationItemSelectedListener(this);
-        mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),mHomeFrag, mGoiMonFrag, mHoaDonFrag);
+        mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), mHomeFrag, mGoiMonFrag, mThanhToanFrag);
         mViewPager.setAdapter(mViewPagerAdapter);
         mViewPager.addOnPageChangeListener(this);
         mViewPager.setOffscreenPageLimit(1);
@@ -100,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected void onStart() {
         super.onStart();
 
+
         Bundle bundle = getIntent().getExtras();
         if (null!=bundle){
             int position = bundle.getInt("position", 0);
@@ -112,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected void onDestroy() {
         super.onDestroy();
         ConnectServer.destroy();
+        ConnectSocketIO.destroy();
     }
 
 

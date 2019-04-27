@@ -1,30 +1,35 @@
 
 package mycompany.com.luanvan.Model;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class DonHang {
 
     @SerializedName("_id")
     @Expose
     private String id;
-    @SerializedName("idNguoiMua")
+    @SerializedName("sttBanAn")
     @Expose
-    private String idNguoiMua;
-    @SerializedName("spMua")
+    private String sttBanAn;
+    @SerializedName("monAn")
     @Expose
-    private List<SpMua> spMua = null;
+    private List<SpMua> monAn = null;
     @SerializedName("tongTien")
     @Expose
     private Integer tongTien;
-    @SerializedName("ngayDatHang")
+    @SerializedName("ngayGoiMon")
     @Expose
-    private String ngayDatHang;
-    @SerializedName("daDuyet")
+    private String ngayGoiMon;
+    @SerializedName("daThanhToan")
     @Expose
-    private Boolean daDuyet;
+    private Boolean daThanhToan;
+    @SerializedName("ngayThanhToan")
+    @Expose
+    private Boolean ngayThanhToan;
+
     @SerializedName("__v")
     @Expose
     private Integer v;
@@ -37,20 +42,20 @@ public class DonHang {
         this.id = id;
     }
 
-    public String getIdNguoiMua() {
-        return idNguoiMua;
+    public String getSttBanAn() {
+        return sttBanAn;
     }
 
-    public void setIdNguoiMua(String idNguoiMua) {
-        this.idNguoiMua = idNguoiMua;
+    public void setSttBanAn(String sttBanAn) {
+        this.sttBanAn = sttBanAn;
     }
 
-    public List<SpMua> getSpMua() {
-        return spMua;
+    public List<SpMua> getMonAn() {
+        return monAn;
     }
 
-    public void setSpMua(List<SpMua> spMua) {
-        this.spMua = spMua;
+    public void setMonAn(List<SpMua> monAn) {
+        this.monAn = monAn;
     }
 
     public Integer getTongTien() {
@@ -61,20 +66,20 @@ public class DonHang {
         this.tongTien = tongTien;
     }
 
-    public String getNgayDatHang() {
-        return ngayDatHang;
+    public String getNgayGoiMon() {
+        return ngayGoiMon;
     }
 
-    public void setNgayDatHang(String ngayDatHang) {
-        this.ngayDatHang = ngayDatHang;
+    public void setNgayGoiMon(String ngayGoiMon) {
+        this.ngayGoiMon = ngayGoiMon;
     }
 
-    public Boolean getDaDuyet() {
-        return daDuyet;
+    public Boolean getDaThanhToan() {
+        return daThanhToan;
     }
 
-    public void setDaDuyet(Boolean daDuyet) {
-        this.daDuyet = daDuyet;
+    public void setDaThanhToan(Boolean daThanhToan) {
+        this.daThanhToan = daThanhToan;
     }
 
     public Integer getV() {

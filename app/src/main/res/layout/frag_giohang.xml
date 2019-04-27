@@ -12,7 +12,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="Giỏ hàng"
+        app:title="Món ăn đã chọn"
         android:gravity="center"
         app:titleTextColor="@color/white">
     </android.support.v7.widget.Toolbar>
@@ -46,7 +46,7 @@
             android:layout_marginTop="8dp"
             android:text="Thành tiền: "
             android:textSize="15sp"
-            app:layout_constraintBottom_toTopOf="@+id/btn_dathang"
+            app:layout_constraintBottom_toTopOf="@+id/btn_goimon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -59,7 +59,7 @@
             android:layout_marginTop="8dp"
             android:text="0"
             android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/btn_dathang"
+            app:layout_constraintBottom_toTopOf="@+id/btn_goimon"
             app:layout_constraintEnd_toStartOf="@+id/textView3"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -76,12 +76,11 @@
             app:layout_constraintTop_toTopOf="@+id/textView_tongtien" />
 
         <Button
-            android:id="@+id/btn_dathang"
+            android:id="@+id/btn_goimon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/dark_orange"
-            android:onClick="datHang"
-            android:text="Đặt hàng"
+            android:text="Gọi món"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent" />
 

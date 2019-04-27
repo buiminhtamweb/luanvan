@@ -6,47 +6,44 @@ import com.google.gson.annotations.SerializedName;
 
 public class SPGioHang {
 
-    @SerializedName("idSpMua")
+    @SerializedName("idMonAn")
     @Expose
-    private String idSpMua;
-    @SerializedName("tensp")
+    private String idMonAn;
+    @SerializedName("tenMA")
     @Expose
-    private String tensp;
-    @SerializedName("giasp")
+    private String tenMA;
+    @SerializedName("giaMA")
     @Expose
-    private Integer giasp;
+    private Integer giaMA;
     @SerializedName("imgurl")
     @Expose
     private String imgurl;
-    @SerializedName("sanluong")
+    @SerializedName("soLuongMua")
     @Expose
-    private Integer sanluong;
-    @SerializedName("sanLuongMua")
-    @Expose
-    private Integer sanLuongMua;
+    private Integer soLuongMua;
 
-    public String getIdSpMua() {
-        return idSpMua;
+    public String getIdMonAn() {
+        return idMonAn;
     }
 
-    public void setIdSpMua(String idSpMua) {
-        this.idSpMua = idSpMua;
+    public void setIdMonAn(String idMonAn) {
+        this.idMonAn = idMonAn;
     }
 
-    public String getTensp() {
-        return tensp;
+    public String getTenMA() {
+        return tenMA;
     }
 
-    public void setTensp(String tensp) {
-        this.tensp = tensp;
+    public void setTenMA(String tenMA) {
+        this.tenMA = tenMA;
     }
 
-    public Integer getGiasp() {
-        return giasp;
+    public Integer getGiaMA() {
+        return giaMA;
     }
 
-    public void setGiasp(Integer giasp) {
-        this.giasp = giasp;
+    public void setGiaMA(Integer giaMA) {
+        this.giaMA = giaMA;
     }
 
     public String getImgurl() {
@@ -57,20 +54,12 @@ public class SPGioHang {
         this.imgurl = imgurl;
     }
 
-    public Integer getSanluong() {
-        return sanluong;
+    public Integer getSoLuongMua() {
+        return soLuongMua;
     }
 
-    public void setSanluong(Integer sanluong) {
-        this.sanluong = sanluong;
-    }
-
-    public Integer getSanLuongMua() {
-        return sanLuongMua;
-    }
-
-    public void setSanLuongMua(Integer sanLuongMua) {
-        this.sanLuongMua = sanLuongMua;
+    public void setSoLuongMua(Integer soLuongMua) {
+        this.soLuongMua = soLuongMua;
     }
 
 }

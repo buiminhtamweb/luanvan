@@ -1,4 +1,3 @@
-
 package mycompany.com.luanvan.Model;
 
 import com.google.gson.annotations.Expose;
@@ -6,53 +5,45 @@ import com.google.gson.annotations.SerializedName;
 
 public class ItemMonAn {
 
-    @SerializedName("id")
+    @SerializedName("idMonAn")
     @Expose
-    private String id;
-    @SerializedName("tensp")
+    private String idMonAn;
+    @SerializedName("tenMA")
     @Expose
-    private String tensp;
-    @SerializedName("giasp")
+    private String tenMA;
+    @SerializedName("giaMA")
     @Expose
-    private Integer giasp;
-//    @SerializedName("sanluong")
-//    @Expose
-//    private Integer sanluong;
+    private Integer giaMA;
     @SerializedName("imgurl")
     @Expose
     private String imgurl;
+    @SerializedName("soLuongMua")
+    @Expose
+    private Integer soLuongMua;
 
-    public String getId() {
-        return id;
+    public String getIdMonAn() {
+        return idMonAn;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setIdMonAn(String idMonAn) {
+        this.idMonAn = idMonAn;
     }
 
-    public String getTensp() {
-        return tensp;
+    public String getTenMA() {
+        return tenMA;
     }
 
-    public void setTensp(String tensp) {
-        this.tensp = tensp;
+    public void setTenMA(String tenMA) {
+        this.tenMA = tenMA;
     }
 
-    public Integer getGiasp() {
-        return giasp;
+    public Integer getGiaMA() {
+        return giaMA;
     }
 
-    public void setGiasp(Integer giasp) {
-        this.giasp = giasp;
+    public void setGiaMA(Integer giaMA) {
+        this.giaMA = giaMA;
     }
-
-//    public Integer getSanluong() {
-//        return sanluong;
-//    }
-//
-//    public void setSanluong(Integer sanluong) {
-//        this.sanluong = sanluong;
-//    }
 
     public String getImgurl() {
         return imgurl;
@@ -62,4 +53,11 @@ public class ItemMonAn {
         this.imgurl = imgurl;
     }
 
+    public Integer getSoLuongMua() {
+        return soLuongMua;
+    }
+
+    public void setSoLuongMua(Integer soLuongMua) {
+        this.soLuongMua = soLuongMua;
+    }
 }

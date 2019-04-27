@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Luận văn tốt nghiệp</string>
-    <string name="title_home">Sản phẩm</string>
-    <string name="title_dashboard">Giỏ hàng</string>
-    <string name="title_notifications">Tài khoản</string>
+    <string name="title_home">Món ăn</string>
+    <string name="title_dashboard">Gọi món</string>
+    <string name="title_notifications">Thanh toán</string>
 
     <string name="code_0">Connection timeout</string>
     <string name="code_404">Resource not avaliable</string>

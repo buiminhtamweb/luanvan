@@ -24,32 +24,33 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import mycompany.com.luanvan.Adapter.SanPhamRecyclerViewAdapter;
+
+import mycompany.com.luanvan.Adapter.MonAnRecyclerViewAdapter;
 import mycompany.com.luanvan.Constant;
 import mycompany.com.luanvan.Data.ConnectServer;
 import mycompany.com.luanvan.MainActivity;
 import mycompany.com.luanvan.Model.DataMonAn;
-import mycompany.com.luanvan.Model.ItemMonAn;
 import mycompany.com.luanvan.Model.Message;
+import mycompany.com.luanvan.Model.MonAn;
 import mycompany.com.luanvan.R;
 import mycompany.com.luanvan.utils.SharedPreferencesHandler;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TimKiemActivity extends AppCompatActivity implements SanPhamRecyclerViewAdapter.onScrollListener,
-        SanPhamRecyclerViewAdapter.onClickListener{
+public class TimKiemActivity extends AppCompatActivity implements MonAnRecyclerViewAdapter.onScrollListener,
+        MonAnRecyclerViewAdapter.onClickListener {
 
     private RecyclerView mRecyclerView;
-    private SanPhamRecyclerViewAdapter mSanPhamRecyclerViewAdapter;
-    private List<ItemMonAn> mSanPhams = new ArrayList<>();
+    private MonAnRecyclerViewAdapter mMonAnRecyclerViewAdapter;
+    private List<MonAn> mSanPhams = new ArrayList<>();
     private int mPageCurrent;
     private int mNumPage;
     private AlertDialog mAlertDialog;
 
     private ImageView mImgSearch;
     private EditText mEdtKeyWord;
-    private String mToken;
+    private int sttBanAn;
     private String mKeyWord;
     private ProgressDialog mProgressDialog;
 
@@ -58,7 +59,7 @@ public class TimKiemActivity extends AppCompatActivity implements SanPhamRecycle
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tim_kiem);
 
-        mToken = SharedPreferencesHandler.getString(this, Constant.TOKEN);
+        sttBanAn = SharedPreferencesHandler.getInt(this, Constant.SO_BAN);
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -97,13 +98,13 @@ public class TimKiemActivity extends AppCompatActivity implements SanPhamRecycle
 
         mRecyclerView = findViewById(R.id.recyclerview);
 
-        mSanPhamRecyclerViewAdapter = new SanPhamRecyclerViewAdapter(this, mSanPhams);
-        mSanPhamRecyclerViewAdapter.setOnScrollListener(this);
-        mSanPhamRecyclerViewAdapter.setOnClickListener(this);
+        mMonAnRecyclerViewAdapter = new MonAnRecyclerViewAdapter(this, mSanPhams);
+        mMonAnRecyclerViewAdapter.setOnScrollListener(this);
+        mMonAnRecyclerViewAdapter.setOnClickListener(this);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(mSanPhamRecyclerViewAdapter);
+        mRecyclerView.setAdapter(mMonAnRecyclerViewAdapter);
 
 
     }
@@ -122,11 +123,11 @@ public class TimKiemActivity extends AppCompatActivity implements SanPhamRecycle
                     mPageCurrent = Integer.parseInt(response.body().getPage());
                     mNumPage = response.body().getNumpages();
 
-                    for (ItemMonAn sp : response.body().getItemMonAns()) {
+                    for (MonAn sp : response.body().getItemMonAns()) {
                         if (sp.getId() != null) mSanPhams.add(sp);
 
                     }
-                    mSanPhamRecyclerViewAdapter.notifyDataSetChanged();
+                    mMonAnRecyclerViewAdapter.notifyDataSetChanged();
                     Log.e("SEARCH", "onResponse: Succ");
                 }
 
@@ -175,7 +176,7 @@ public class TimKiemActivity extends AppCompatActivity implements SanPhamRecycle
     private void themVaoGioHang(final String mIdSP) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_them_san_luong_sp, null);
+        View dialogView = inflater.inflate(R.layout.dialog_them_so_luong_monan, null);
         Button btnXacNhan = dialogView.findViewById(R.id.btn_xacnhan);
         Button btnHuy = dialogView.findViewById(R.id.btn_huy);
         final EditText edtSanLuong = dialogView.findViewById(R.id.edt_sanluongmua);
@@ -194,14 +195,14 @@ public class TimKiemActivity extends AppCompatActivity implements SanPhamRecycle
                 int sanLuongMua = Integer.parseInt(edtSanLuong.getText().toString());
                 ConnectServer.getInstance(TimKiemActivity.this)
                         .getApi()
-                        .themSPVaoGioHang(mToken, mIdSP, sanLuongMua)
+                        .themMonAn(sttBanAn, mIdSP, sanLuongMua)
                         .enqueue(new Callback<Message>() {
                             @Override
                             public void onResponse(Call<Message> call, Response<Message> response) {
                                 mAlertDialog.dismiss();
                                 try {
                                     if (response.code() == 401) {
-                                        Intent intent = new Intent(TimKiemActivity.this, LoginActivity.class);
+                                        Intent intent = new Intent(TimKiemActivity.this, BeginActivity.class);
                                         intent.putExtra("message", "Phiên làm việc hết hạn \n Vui lòng đăng nhập lại");
                                         startActivity(intent);
                                         finish();
