@@ -4,11 +4,13 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import mycompany.com.luanvan.Adapter.ViewPagerAdapter;
 import mycompany.com.luanvan.Data.ConnectServer;
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private HomeFrag mHomeFrag;
     private GoiMonFrag mGoiMonFrag;
     private ThanhToanFrag mThanhToanFrag;
+    private AlertDialog mAlertDialog;
 
 
     @Override
@@ -70,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 return true;
             case R.id.navigation_notifications:
                 mViewPager.setCurrentItem(2, true);
+                mThanhToanFrag.reloadDataServer(); //Load lại dữ liệu
 
                 //Load lại thông tin cá nhân
                 return true;
@@ -106,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
 
         Bundle bundle = getIntent().getExtras();
-        if (null!=bundle){
+        if (null != bundle) {
             int position = bundle.getInt("position", 0);
             mViewPager.setCurrentItem(position);
         }
@@ -123,8 +127,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        viewExitApp();
+        Toast.makeText(this, "Bạn đang ở giao diện chọn món ăn", Toast.LENGTH_SHORT).show();
+        Snackbar snackbar = Snackbar.make(mViewPager, "Bạn đang ở giao diện chọn món ăn", Snackbar.LENGTH_SHORT);
+        snackbar.show();
     }
 
     private void viewExitApp() {
@@ -139,7 +144,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 System.exit(1);
             }
         }).setPositiveButton("Hủy", null);
-        AlertDialog mAlertDialog = builder.create();
+        mAlertDialog = builder.create();
         mAlertDialog.show();
     }
+
 }

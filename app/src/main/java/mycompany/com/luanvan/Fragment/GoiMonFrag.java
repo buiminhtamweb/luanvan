@@ -113,7 +113,7 @@ public class GoiMonFrag extends Fragment implements GioHangRecyclerViewAdapter.o
 
             @Override
             public void onFailure(Call<List<SPGioHang>> call, Throwable t) {
-
+                showErrDisconnect(mBtnDatHang);
             }
         });
     }
@@ -140,13 +140,6 @@ public class GoiMonFrag extends Fragment implements GioHangRecyclerViewAdapter.o
                 public void onResponse(Call<Message> call, Response<Message> response) {
 
                     hideProgressDialog();
-
-                    if (response.isSuccessful() && response.code() == 401) {
-                        Intent intent = new Intent(getActivity(), BeginActivity.class);
-                        intent.putExtra("message", "Phiên làm việc hết hạn \n Vui lòng đăng nhập lại");
-                        startActivity(intent);
-                        getActivity().finish();
-                    }
 
                     if (response.code() == 200) {//Yêu cầu đặt hàng thành công
 
@@ -178,7 +171,7 @@ public class GoiMonFrag extends Fragment implements GioHangRecyclerViewAdapter.o
 
                 @Override
                 public void onFailure(Call<Message> call, Throwable t) {
-                    viewErrorExitApp();
+                    showErrDisconnect(mBtnDatHang);
                 }
             });
 
@@ -239,7 +232,7 @@ public class GoiMonFrag extends Fragment implements GioHangRecyclerViewAdapter.o
 
                     @Override
                     public void onFailure(Call<Message> call, Throwable t) {
-                        viewErrorExitApp();
+                        showErrDisconnect(mBtnDatHang);
                     }
                 });
 
@@ -282,11 +275,11 @@ public class GoiMonFrag extends Fragment implements GioHangRecyclerViewAdapter.o
                         if (null != response.body() && response.code() == 200) {
 
 
-                                viewSucc(mTvTongTien, "Đã cập nhật thành công");
+                            viewSucc(mTvTongTien, "Đã cập nhật thành công");
                             mGioHang.get(position).setSoLuongMua(soLuongMua);
-                                mGioHangRecyclerViewAdapter.notifyDataSetChanged();
+                            mGioHangRecyclerViewAdapter.notifyDataSetChanged();
                             mTvTongTien.setText("" + Number.convertNumber(mGioHangRecyclerViewAdapter.getTongTien()));
-                                mAlertDialog.dismiss();
+                            mAlertDialog.dismiss();
 
                         }
                         if (response.code() == 400 && null != response.errorBody()) {
@@ -301,7 +294,7 @@ public class GoiMonFrag extends Fragment implements GioHangRecyclerViewAdapter.o
 
                     @Override
                     public void onFailure(Call<Message> call, Throwable t) {
-                        viewErrorExitApp();
+                        showErrDisconnect(mBtnDatHang);
                     }
                 });
 
@@ -322,22 +315,6 @@ public class GoiMonFrag extends Fragment implements GioHangRecyclerViewAdapter.o
         }
     }
 
-    private void viewErrorExitApp() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Cảnh báo");
-        builder.setMessage("Không thể kết nối đến máy chủ ! \nThoát ứng dụng.");
-        builder.setCancelable(false);
-        builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-                System.exit(1);
-            }
-        });
-        AlertDialog mAlertDialog = builder.create();
-        mAlertDialog.show();
-    }
-
     private void viewError(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Cảnh báo");
@@ -349,8 +326,8 @@ public class GoiMonFrag extends Fragment implements GioHangRecyclerViewAdapter.o
                 dialogInterface.dismiss();
             }
         });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+        mAlertDialog = builder.create();
+        mAlertDialog.show();
     }
 
     private void viewSucc(View view, String message) {
@@ -369,6 +346,25 @@ public class GoiMonFrag extends Fragment implements GioHangRecyclerViewAdapter.o
         if (null != mProgressDialog) {
             mProgressDialog.dismiss();
         }
+    }
+
+    public void showErrDisconnect(View view) {
+        // Create snackbar
+        if (view.isShown()) {
+            final Snackbar snackbar = Snackbar.make(view, "Mất kết nối đến máy chủ", Snackbar.LENGTH_INDEFINITE);
+
+            // Set an action on it, and a handler
+            snackbar.setAction("Thử lại", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mGioHang.clear();
+                    layDuLieuGioHang();
+                }
+            });
+
+            snackbar.show();
+        }
+
     }
 
 }

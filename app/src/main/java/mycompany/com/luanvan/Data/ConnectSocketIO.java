@@ -1,6 +1,8 @@
 package mycompany.com.luanvan.Data;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
@@ -64,6 +66,9 @@ public class ConnectSocketIO {
                 .setSmallIcon(R.drawable.logo_white)
                 .setContentTitle("Bàn số " + mSTTBA)
                 .setContentText("Thực phẩm đang được vận chuyển")
+                .setVibrate(new long[]{1000, 1000, 1000})
+                .setLights(Color.RED, 3000, 3000)
+                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
 
@@ -111,7 +116,10 @@ public class ConnectSocketIO {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        mSocket.emit(STATIC_CHANGE, data);
+        if (mSocket.connected()) {
+            mSocket.emit(STATIC_CHANGE, data);
+        }
+
         mSocket.disconnect();
         mSocket.close();
         mSocket = null;
@@ -129,7 +137,10 @@ public class ConnectSocketIO {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        mSocket.emit(event, jsonObject);
+        if (mSocket.connected()) {
+            mSocket.emit(event, jsonObject);
+        }
+
     }
 
     public void sendData(String event, String key, boolean value) {
@@ -141,7 +152,9 @@ public class ConnectSocketIO {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        mSocket.emit(event, jsonObject);
+        if (mSocket.connected()) {
+            mSocket.emit(event, jsonObject);
+        }
     }
 
     public void sendData(String event, String key, int value) {
@@ -153,7 +166,9 @@ public class ConnectSocketIO {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        mSocket.emit(event, jsonObject);
+        if (mSocket.connected()) {
+            mSocket.emit(event, jsonObject);
+        }
     }
 
 }

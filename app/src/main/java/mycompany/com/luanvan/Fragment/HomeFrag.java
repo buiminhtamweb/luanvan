@@ -118,7 +118,7 @@ public class HomeFrag extends Fragment implements MonAnRecyclerViewAdapter.onScr
             @Override
             public void onFailure(Call<DataMonAn> call, Throwable t) {
                 Log.e("HOME_FRAG", "onFailure: " + t.getMessage());
-                viewError("Lỗi kết nối đến máy chủ!");
+                showErrDisconnect(mRecyclerView);
             }
         });
 
@@ -196,8 +196,8 @@ public class HomeFrag extends Fragment implements MonAnRecyclerViewAdapter.onScr
 
                             @Override
                             public void onFailure(Call<Message> call, Throwable t) {
-                                mAlertDialog.dismiss();
-                                viewError("Lỗi kết nối đến máy chủ!");
+                                if (mAlertDialog.isShowing()) mAlertDialog.dismiss();
+                                showErrDisconnect(mRecyclerView);
                             }
                         });
             }
@@ -219,8 +219,26 @@ public class HomeFrag extends Fragment implements MonAnRecyclerViewAdapter.onScr
                 dialogInterface.dismiss();
             }
         });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+        mAlertDialog = builder.create();
+        mAlertDialog.show();
+    }
+
+    public void showErrDisconnect(View view) {
+        // Create snackbar
+        if (view.isShown()) {
+            final Snackbar snackbar = Snackbar.make(view, "Mất kết nối đến máy chủ", Snackbar.LENGTH_INDEFINITE);
+
+            // Set an action on it, and a handler
+            snackbar.setAction("Thử lại", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mSanPhams.clear();
+                    layDSSanPham(1);
+                }
+            });
+            snackbar.show();
+        }
+
     }
 
     private void viewSucc(View view, String message) {

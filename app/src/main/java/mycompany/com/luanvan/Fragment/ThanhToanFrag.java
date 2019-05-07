@@ -185,27 +185,9 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
 
             @Override
             public void onFailure(Call<GoiMonDetail> call, Throwable t) {
-
+                showErrDisconnect(mRecyDSGoiMon);
             }
         });
-    }
-
-
-
-    private void viewErrorExitApp() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Cảnh báo");
-        builder.setMessage("Không thể kết nối đến máy chủ ! \nThoát ứng dụng.");
-        builder.setCancelable(false);
-        builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-                System.exit(1);
-            }
-        });
-        AlertDialog mAlertDialog = builder.create();
-        mAlertDialog.show();
     }
 
     private void viewError(String message) {
@@ -219,8 +201,8 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
                 dialogInterface.dismiss();
             }
         });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+        mAlertDialog = builder.create();
+        mAlertDialog.show();
     }
 
     private void viewSucc(View view, String message) {
@@ -234,7 +216,7 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
                 if (response.isSuccessful() && response.code() == 400) {
 
                     viewError(response.errorBody().toString());
-                } else {//Yêu cầu đặt hàng thành công
+                } else if (null != response.body()) {//Yêu cầu đặt hàng thành công
 
                     mGoiMonList.clear(); //Xóa các dữ liệu trong giỏ hàng
 
@@ -252,7 +234,7 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
 
             @Override
             public void onFailure(Call<List<GoiMon>> call, Throwable t) {
-
+                showErrDisconnect(mRecyDSGoiMon);
             }
         });
 
@@ -269,5 +251,25 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
     @Override
     public void reloadDataServer() {
         getDataFromServer();
+    }
+
+
+    public void showErrDisconnect(View view) {
+        // Create snackbar
+        if (view.isShown()) {
+            final Snackbar snackbar = Snackbar.make(view, "Mất kết nối đến máy chủ", Snackbar.LENGTH_INDEFINITE);
+
+            // Set an action on it, and a handler
+            snackbar.setAction("Thử lại", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mGoiMonList.clear();
+                    reloadDataServer();
+                }
+            });
+
+            snackbar.show();
+        }
+
     }
 }

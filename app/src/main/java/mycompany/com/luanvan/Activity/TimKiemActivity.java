@@ -145,7 +145,7 @@ public class TimKiemActivity extends AppCompatActivity implements MonAnRecyclerV
             @Override
             public void onFailure(Call<DataMonAn> call, Throwable t) {
                 Log.e("SEARCH", "onFailure: " + t.getMessage());
-                viewErrorExitApp();
+                showErrDisconnect(mRecyclerView);
             }
         });
 
@@ -251,13 +251,14 @@ public class TimKiemActivity extends AppCompatActivity implements MonAnRecyclerV
     }
 
     private void viewSucc(View view, String message) {
-        Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
+        final Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
 
         snackbar.setAction("Đi đến giỏ hàng", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(TimKiemActivity.this, MainActivity.class);
                 intent.putExtra("position", 1);
+                snackbar.dismiss();
                 startActivity(intent);
                 finish();
             }
@@ -265,20 +266,24 @@ public class TimKiemActivity extends AppCompatActivity implements MonAnRecyclerV
         snackbar.show();
     }
 
-    private void viewErrorExitApp() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Cảnh báo");
-        builder.setMessage("Không thể kết nối đến máy chủ ! \nThoát ứng dụng.");
-        builder.setCancelable(false);
-        builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-                System.exit(1);
-            }
-        });
-        AlertDialog mAlertDialog = builder.create();
-        mAlertDialog.show();
+
+    public void showErrDisconnect(View view) {
+        // Create snackbar
+        if (view.isShown()) {
+            final Snackbar snackbar = Snackbar.make(view, "Mất kết nối đến máy chủ", Snackbar.LENGTH_INDEFINITE);
+
+            // Set an action on it, and a handler
+            snackbar.setAction("Thử lại", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mSanPhams.clear();
+                    timKiem(mKeyWord, 1);
+                }
+            });
+
+            snackbar.show();
+        }
+
     }
 
     private void viewProgressDialog(String message) {
