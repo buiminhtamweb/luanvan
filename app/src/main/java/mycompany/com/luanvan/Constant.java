@@ -13,6 +13,7 @@ public class Constant {
     public static final String SOCKET_VAN_CHUYEN = "goi-mon-van-chuyen-";
     public static final String SOCKET_VAN_CHUYEN_HOAN_THANH = "goi-mon-van-chuyen-hoan-thanh-";
     public static final String SOCKET_DA_THANH_TOAN = "goi-mon-da-thanh-toan-";
+    public static final String SOCKET_NOTIFICATION = "notification-table-";
 
     public static final int NOTIFI_ID = 1;
 

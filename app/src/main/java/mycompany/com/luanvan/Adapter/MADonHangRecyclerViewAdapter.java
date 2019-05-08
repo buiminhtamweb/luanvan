@@ -41,8 +41,9 @@ public class MADonHangRecyclerViewAdapter extends RecyclerView.Adapter<MADonHang
         Log.e("Adapter", "onBindViewHolder: "+  mSanPhams.get(position).getImgurl() );
         Picasso.get().load(Constant.URL_IMG + mSanPhams.get(position).getImgurl()).fit().centerCrop().into(holder.mImageView);
         holder.mNameAgri.setText(mSanPhams.get(position).getTenMA());
-        holder.tongTien.setText("Giá mua: " + Number.convertNumber(mSanPhams.get(position).getGiaMA()) + " VND");
-//        holder.mSanLuong.setText("Sản lượng mua: " + Number.convertNumber(mSanPhams.get(position).getSanluong()) + " Gam");
+        holder.mGiaMua.setText("Giá mua: " + Number.convertNumber(mSanPhams.get(position).getGiaMA()) + " VND");
+        holder.mSoLuong.setText("Số lượng: " + (mSanPhams.get(position).getSoLuongMua()) + "");
+        holder.tongTien.setText("Thành tiền: " + Number.convertNumber((mSanPhams.get(position).getGiaMA() * mSanPhams.get(position).getSoLuongMua())) + " VND");
 
     }
 
@@ -63,15 +64,16 @@ public class MADonHangRecyclerViewAdapter extends RecyclerView.Adapter<MADonHang
 
         ImageView mImageView;
         TextView mNameAgri;
-//        TextView mSanLuong;
+        TextView mSoLuong, mGiaMua;
         TextView tongTien;
 
         public Holder(View view) {
             super(view);
             mImageView = (ImageView) view.findViewById(R.id.imageView);
             mNameAgri = (TextView) view.findViewById(R.id.textView_tensp);
-//            mSanLuong = (TextView) view.findViewById(R.id.textView_gia_mua_sp);
-            tongTien = (TextView) view.findViewById(R.id.textView_san_luong_mua);
+            mSoLuong = (TextView) view.findViewById(R.id.textView_san_luong_mua);
+            mGiaMua = (TextView) view.findViewById(R.id.textView_gia_mua_sp);
+            tongTien = (TextView) view.findViewById(R.id.textView_tong_tien);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override

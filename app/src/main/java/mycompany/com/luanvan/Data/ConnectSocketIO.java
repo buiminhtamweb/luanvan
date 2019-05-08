@@ -23,6 +23,7 @@ import mycompany.com.luanvan.utils.SharedPreferencesHandler;
 
 import static mycompany.com.luanvan.Constant.NOTIFI_ID;
 import static mycompany.com.luanvan.Constant.SOCKET_DA_THANH_TOAN;
+import static mycompany.com.luanvan.Constant.SOCKET_NOTIFICATION;
 import static mycompany.com.luanvan.Constant.SOCKET_VAN_CHUYEN;
 import static mycompany.com.luanvan.Constant.SOCKET_VAN_CHUYEN_HOAN_THANH;
 import static mycompany.com.luanvan.Constant.STATUS;
@@ -90,6 +91,27 @@ public class ConnectSocketIO {
             @Override
             public void call(Object... args) {
                 mThanhToanInterface.reloadDataServer();
+            }
+        });
+
+        mSocket.on(SOCKET_NOTIFICATION + mSTTBA, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+//                Toast.makeText(context, "Yêu cầu bị hủy. Vì chưa có món ăn hoàn thành và vận chuyển", Toast.LENGTH_SHORT).show();
+
+                JSONObject obj = (JSONObject) args[0];
+                try {
+                    String msg = obj.getString("msg");
+                    Log.e(TAG, "SOCKET_NOTIFICATION: " + msg);
+                    mThanhToanInterface.viewErrorSocket(msg);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+//                try {
+//                    Toast.makeText(context, obj.getString("msg"), Toast.LENGTH_SHORT).show();
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
             }
         });
 
@@ -171,4 +193,7 @@ public class ConnectSocketIO {
         }
     }
 
+    public void setmThanhToanInterface(ThanhToanInterface mThanhToanInterface) {
+        this.mThanhToanInterface = mThanhToanInterface;
+    }
 }

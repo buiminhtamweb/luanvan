@@ -9,17 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/backround_search"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:title="Món ăn đã chọn"
-        android:gravity="center"
-        app:titleTextColor="@color/white">
-    </android.support.v7.widget.Toolbar>
+        app:titleTextColor="@color/white"></android.support.v7.widget.Toolbar>
 
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/white_smoke"
@@ -28,7 +26,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-    </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/tv_alert"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textStyle="italic"
+            android:textColor="@color/red"
+            android:text="Không có sản phẩm trong giỏ hàng" />
+
+    </RelativeLayout>
+
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/linearLayout"
@@ -41,9 +54,9 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:text="Thành tiền: "
             android:textSize="15sp"
             app:layout_constraintBottom_toTopOf="@+id/btn_goimon"
@@ -54,9 +67,9 @@
             android:id="@+id/textView_tongtien"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:text="0"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/btn_goimon"

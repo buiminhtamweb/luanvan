@@ -1,6 +1,7 @@
 package mycompany.com.luanvan.Fragment;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import mycompany.com.luanvan.Activity.ChiTietSPActivity;
 import mycompany.com.luanvan.Adapter.GoiMonRecyclerViewAdapter;
 import mycompany.com.luanvan.Adapter.MADonHangRecyclerViewAdapter;
 import mycompany.com.luanvan.Constant;
@@ -118,6 +120,8 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
 
         getDataFromServer();
 
+        ConnectSocketIO.getInstance(getContext()).setmThanhToanInterface(this);
+
         return view;
     }
 
@@ -147,6 +151,14 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerViewMA.setLayoutManager(layoutManager);
         final MADonHangRecyclerViewAdapter maDonHangRecyclerViewAdapter = new MADonHangRecyclerViewAdapter(itemMonAns);
+        maDonHangRecyclerViewAdapter.setOnClickListener(new MADonHangRecyclerViewAdapter.onClickListener() {
+            @Override
+            public void onItemClick(int position, String idSanPham) {
+                Intent intent = new Intent(getActivity(), ChiTietSPActivity.class);
+                intent.putExtra("idSP", idSanPham);
+                startActivity(intent);
+            }
+        });
         recyclerViewMA.setAdapter(maDonHangRecyclerViewAdapter);
 
         builder.setView(dialogView);
@@ -190,20 +202,7 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
         });
     }
 
-    private void viewError(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Cảnh báo");
-        builder.setMessage(message);
-        builder.setCancelable(false);
-        builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        mAlertDialog = builder.create();
-        mAlertDialog.show();
-    }
+
 
     private void viewSucc(View view, String message) {
         Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
@@ -250,7 +249,51 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
 
     @Override
     public void reloadDataServer() {
-        getDataFromServer();
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+//                Toast.makeText(activity, "Hello", Toast.LENGTH_SHORT).show();
+                getDataFromServer();
+            }
+        });
+
+    }
+
+    @Override
+    public void viewErrorSocket(final String msg) {
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+//                Toast.makeText(activity, "Hello", Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Cảnh báo");
+                builder.setMessage(msg);
+                builder.setCancelable(false);
+                builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                mAlertDialog = builder.create();
+                mAlertDialog.show();
+            }
+        });
+
+    }
+
+
+    private void viewError(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Cảnh báo");
+        builder.setMessage(message);
+        builder.setCancelable(false);
+        builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        mAlertDialog = builder.create();
+        mAlertDialog.show();
     }
 
 

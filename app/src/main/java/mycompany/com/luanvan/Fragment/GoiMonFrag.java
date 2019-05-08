@@ -44,7 +44,7 @@ public class GoiMonFrag extends Fragment implements GioHangRecyclerViewAdapter.o
     private RecyclerView mRecyclerView;
     private List<SPGioHang> mGioHang = new ArrayList<>();
     private GioHangRecyclerViewAdapter mGioHangRecyclerViewAdapter;
-    private TextView mTvTongTien;
+    private TextView mTvTongTien, mTvAlert;
     private AlertDialog mAlertDialog;
     private API api;
     private Button mBtnDatHang;
@@ -61,6 +61,7 @@ public class GoiMonFrag extends Fragment implements GioHangRecyclerViewAdapter.o
         mBtnDatHang = (Button) view.findViewById(R.id.btn_goimon);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         mTvTongTien = (TextView) view.findViewById(R.id.textView_tongtien);
+        mTvAlert = (TextView) view.findViewById(R.id.tv_alert);
 
         mGioHangRecyclerViewAdapter = new GioHangRecyclerViewAdapter(getContext(), mGioHang);
         mGioHangRecyclerViewAdapter.setOnClickListener(this);
@@ -83,16 +84,10 @@ public class GoiMonFrag extends Fragment implements GioHangRecyclerViewAdapter.o
             @Override
             public void onResponse(Call<List<SPGioHang>> call, Response<List<SPGioHang>> response) {
                 mGioHang.clear();
-                if (response.code() == 401) {
-                    Intent intent = new Intent(getContext(), BeginActivity.class);
-                    intent.putExtra("message", "Phiên làm việc hết hạn \n Vui lòng đăng nhập lại");
-                    startActivity(intent);
-                    getActivity().finish();
-                }
 
                 if (response.code() == 400) {
                     try {
-                        viewSucc(mRecyclerView, response.errorBody().string());
+                        viewNullGioHang(response.errorBody().string());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -107,6 +102,7 @@ public class GoiMonFrag extends Fragment implements GioHangRecyclerViewAdapter.o
 
                     mGioHangRecyclerViewAdapter.notifyDataSetChanged();
                     mTvTongTien.setText(Number.convertNumber(mGioHangRecyclerViewAdapter.getTongTien()) + "");
+                    mTvAlert.setVisibility(View.GONE);
                 }
 
             }
@@ -116,6 +112,16 @@ public class GoiMonFrag extends Fragment implements GioHangRecyclerViewAdapter.o
                 showErrDisconnect(mBtnDatHang);
             }
         });
+    }
+
+    private void viewNullGioHang(String string) {
+
+        mTvAlert.setText(string);
+        if (!mTvAlert.isEnabled()) {
+            mTvAlert.setVisibility(View.VISIBLE);
+        }
+
+
     }
 
     private void datHang() {

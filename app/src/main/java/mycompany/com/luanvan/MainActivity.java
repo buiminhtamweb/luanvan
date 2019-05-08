@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         mGoiMonFrag = new GoiMonFrag();
         mThanhToanFrag = new ThanhToanFrag();
 
+
         mBottomNavigation = (BottomNavigationView) findViewById(R.id.navigation);
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
 
