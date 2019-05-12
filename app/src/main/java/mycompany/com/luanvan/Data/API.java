@@ -33,7 +33,7 @@ public interface API {
     Call<ChiTietMonAn> getChiTietSanPham(@Path("idMonAn") String idMonAn);
 
 
-    //Bàn ăn
+    //Bàn ăn giỏ hàng
     @GET("BanAns/{sttBanAn}")
     Call<List<SPGioHang>> layThongTinBanAn(@Path("sttBanAn") int sttBanAn);
 

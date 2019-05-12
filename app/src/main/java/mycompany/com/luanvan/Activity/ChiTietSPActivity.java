@@ -25,6 +25,7 @@ import mycompany.com.luanvan.MainActivity;
 import mycompany.com.luanvan.Model.ChiTietMonAn;
 import mycompany.com.luanvan.Model.Message;
 import mycompany.com.luanvan.R;
+import mycompany.com.luanvan.utils.Number;
 import mycompany.com.luanvan.utils.SharedPreferencesHandler;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,11 +33,9 @@ import retrofit2.Response;
 
 public class ChiTietSPActivity extends AppCompatActivity {
 
-    String idNguoiDung = "";
     private String mIdSP;
     private ImageView mImageView;
-    private TextView mTenSanPham, mGiaSanPham, mSanLuongSP, mChiTietSP;
-    private AlertDialog alertDialog = null;
+    private TextView mTenSanPham, mGiaSanPham, mChiTietSP;
     private AlertDialog mAlertDialog;
     private int sttBanAn;
 
@@ -50,19 +49,17 @@ public class ChiTietSPActivity extends AppCompatActivity {
             mIdSP = intent.getExtras().getString("idSP", "");
         } else finish();
         sttBanAn = SharedPreferencesHandler.getInt(getBaseContext(), Constant.SO_BAN);
-        idNguoiDung = SharedPreferencesHandler.getString(this, "id");
 
         mImageView = (ImageView) findViewById(R.id.img_agri);
         mTenSanPham = (TextView) findViewById(R.id.tv_ten_ns);
         mGiaSanPham = (TextView) findViewById(R.id.tv_gia);
-        mSanLuongSP = (TextView) findViewById(R.id.tv_sl_conlai);
         mChiTietSP = (TextView) findViewById(R.id.tv_nd_chitiet_ns);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
             setSupportActionBar(toolbar);
-            toolbar.setTitle("Chi tiết sản phẩm");
+            toolbar.setTitle("Chi tiết món ăn");
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -71,32 +68,9 @@ public class ChiTietSPActivity extends AppCompatActivity {
             });
         }
 
-        ConnectServer.getInstance(getApplicationContext()).getApi().getChiTietSanPham(mIdSP).enqueue(new Callback<ChiTietMonAn>() {
-            @Override
-            public void onResponse(Call<ChiTietMonAn> call, Response<ChiTietMonAn> response) {
+        layThongTinMonAn();
 
-                if (response.code() == 200 && null != response.body()) {
-                    ChiTietMonAn chiTietMonAn = response.body();
-                    Picasso.get().load(Constant.URL_IMG + chiTietMonAn.getImgurl()).fit().centerCrop().into(mImageView);
-                    mTenSanPham.setText(chiTietMonAn.getTenMA());
-                    mGiaSanPham.setText("Giá: " + chiTietMonAn.getGiaMA().toString());
-//                    mSanLuongSP.setText("Tồn kho: " + chiTietMonAn.getSanluong().toString());
-                    mChiTietSP.setText(chiTietMonAn.getChitietsp().toString());
-                }
-                if (response.code() == 400 && response.errorBody() != null) {
-                    try {
-                        viewError(response.errorBody().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
 
-            @Override
-            public void onFailure(Call<ChiTietMonAn> call, Throwable t) {
-                viewErrorExitApp();
-            }
-        });
 
     }
 
@@ -112,20 +86,51 @@ public class ChiTietSPActivity extends AppCompatActivity {
         finish();
     }
 
-    private void viewErrorExitApp() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Cảnh báo");
-        builder.setMessage("Không thể kết nối đến máy chủ ! \nThoát ứng dụng.");
-        builder.setCancelable(false);
-        builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+    void layThongTinMonAn() {
+        ConnectServer.getInstance(getApplicationContext()).getApi().getChiTietSanPham(mIdSP).enqueue(new Callback<ChiTietMonAn>() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-                System.exit(1);
+            public void onResponse(Call<ChiTietMonAn> call, Response<ChiTietMonAn> response) {
+
+                if (response.code() == 200 && null != response.body()) {
+                    ChiTietMonAn chiTietMonAn = response.body();
+                    Picasso.get().load(Constant.URL_IMG + chiTietMonAn.getImgurl()).fit().centerCrop().into(mImageView);
+                    mTenSanPham.setText(chiTietMonAn.getTenMA());
+                    mGiaSanPham.setText("Giá: " + Number.convertNumber(chiTietMonAn.getGiaMA()) + " VND");
+//                    mSanLuongSP.setText("Tồn kho: " + chiTietMonAn.getSanluong().toString());
+                    mChiTietSP.setText(chiTietMonAn.getChitietsp().toString());
+                }
+                if (response.code() == 400 && response.errorBody() != null) {
+                    try {
+                        viewError(response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ChiTietMonAn> call, Throwable t) {
+                showErrDisconnect(mTenSanPham);
             }
         });
-        AlertDialog mAlertDialog = builder.create();
-        mAlertDialog.show();
+    }
+
+
+    public void showErrDisconnect(View view) {
+        // Create snackbar
+        if (view.isShown()) {
+            final Snackbar snackbar = Snackbar.make(view, "Mất kết nối đến máy chủ", Snackbar.LENGTH_INDEFINITE);
+
+            // Set an action on it, and a handler
+            snackbar.setAction("Thử lại", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    layThongTinMonAn();
+                }
+            });
+            snackbar.show();
+        }
+
     }
 
 
@@ -141,7 +146,7 @@ public class ChiTietSPActivity extends AppCompatActivity {
         btnHuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (alertDialog.isShowing()) alertDialog.dismiss();
+                if (mAlertDialog.isShowing()) mAlertDialog.dismiss();
             }
         });
 
@@ -157,12 +162,7 @@ public class ChiTietSPActivity extends AppCompatActivity {
                             public void onResponse(Call<Message> call, Response<Message> response) {
                                 mAlertDialog.dismiss();
                                 try {
-                                    if (response.code() == 401) {
-                                        Intent intent = new Intent(getBaseContext(), BeginActivity.class);
-                                        intent.putExtra("message", "Phiên làm việc hết hạn \n Vui lòng đăng nhập lại");
-                                        startActivity(intent);
-                                        finish();
-                                    }
+
                                     if (response.code() == 200) {
                                         viewSucc(mImageView, "Đã đặt hàng thành công !");
                                     }
@@ -186,7 +186,7 @@ public class ChiTietSPActivity extends AppCompatActivity {
             }
         });
         dialogBuilder.setView(dialogView);
-        dialogBuilder.setTitle("Đặt hàng");
+        dialogBuilder.setTitle("Thêm vào giỏ hàng");
         mAlertDialog = dialogBuilder.create();
         mAlertDialog.show();
     }

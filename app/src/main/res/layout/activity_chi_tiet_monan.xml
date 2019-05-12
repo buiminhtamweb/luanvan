@@ -6,7 +6,7 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        app:title="Chi tiết sản phẩm"
+        app:title="Chi tiết món ăn"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:titleTextColor="@color/white"
@@ -82,7 +82,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Chi tiết nông sản" />
+                    android:text="Thành phần món ăn" />
 
                 <TextView
                     android:id="@+id/tv_nd_chitiet_ns"
@@ -102,7 +102,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/dark_orange"
-        android:text="Thêm vào giở hàng"
+        android:text="Thêm vào giỏ hàng"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
