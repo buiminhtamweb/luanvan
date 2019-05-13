@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import mycompany.com.luanvan.Activity.ChiTietSPActivity;
 import mycompany.com.luanvan.Adapter.GoiMonRecyclerViewAdapter;
@@ -249,34 +250,37 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
 
     @Override
     public void reloadDataServer() {
-        getActivity().runOnUiThread(new Runnable() {
-            public void run() {
-//                Toast.makeText(activity, "Hello", Toast.LENGTH_SHORT).show();
-                getDataFromServer();
-            }
-        });
-
+        if (null != getActivity()) {
+            Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                public void run() {
+//                Toast.makeText(getContext(), "Gọi món vừa mới cập nhật trạng thái", Toast.LENGTH_SHORT).show();
+                    getDataFromServer();
+                }
+            });
+        }
     }
 
     @Override
     public void viewErrorSocket(final String msg) {
-        getActivity().runOnUiThread(new Runnable() {
-            public void run() {
-//                Toast.makeText(activity, "Hello", Toast.LENGTH_SHORT).show();
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Cảnh báo");
-                builder.setMessage(msg);
-                builder.setCancelable(false);
-                builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-                mAlertDialog = builder.create();
-                mAlertDialog.show();
-            }
-        });
+        if (null != getActivity()) {
+            Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                public void run() {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
+                    builder.setTitle("Cảnh báo");
+                    builder.setMessage(msg);
+                    builder.setCancelable(false);
+                    builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    mAlertDialog = builder.create();
+                    mAlertDialog.show();
+                }
+            });
+        }
+
 
     }
 
@@ -307,7 +311,7 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
                 @Override
                 public void onClick(View v) {
                     mGoiMonList.clear();
-                    reloadDataServer();
+                    getDataFromServer();
                 }
             });
 

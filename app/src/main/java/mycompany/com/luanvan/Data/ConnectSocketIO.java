@@ -77,6 +77,7 @@ public class ConnectSocketIO {
             @Override
             public void call(Object... args) {
                 notificationManager.notify(NOTIFI_ID, mBuilder.build());
+                mThanhToanInterface.reloadDataServer();
             }
         });
 
@@ -107,11 +108,6 @@ public class ConnectSocketIO {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-//                try {
-//                    Toast.makeText(context, obj.getString("msg"), Toast.LENGTH_SHORT).show();
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
             }
         });
 

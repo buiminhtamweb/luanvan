@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import mycompany.com.luanvan.Activity.BeginActivity;
 import mycompany.com.luanvan.Activity.ChiTietSPActivity;
 import mycompany.com.luanvan.Adapter.GioHangRecyclerViewAdapter;
 import mycompany.com.luanvan.Constant;
@@ -154,17 +153,10 @@ public class GoiMonFrag extends Fragment implements GioHangRecyclerViewAdapter.o
                         mTvTongTien.setText("" + Number.convertNumber(mGioHangRecyclerViewAdapter.getTongTien()));
                         viewSucc(mTvTongTien, response.body().getMessage());
 
+                        viewNullGioHang("Chưa có món ăn trong giỏ hàng");
 
                     }
-                    if (response.isSuccessful() && response.code() == 300) {
-                        for (SPGioHang spGH : mGioHang) {
-                            if (spGH.getIdMonAn().equals(response.body().getMessage())) {
-                                viewError("Sản lượng " + spGH.getTenMA() + " không đủ trong kho không đủ để cung ứng \n" +
-                                        " Quí khách vui lòng cập nhật lại sản lượng mua");
-                            }
-                        }
-                        viewError(response.body().getMessage());
-                    }
+
                     if (response.code() == 400) {
                         try {
                             viewError(response.errorBody().string());
@@ -213,18 +205,14 @@ public class GoiMonFrag extends Fragment implements GioHangRecyclerViewAdapter.o
                     @Override
                     public void onResponse(Call<Message> call, Response<Message> response) {
 
-                        if (response.code() == 401) {
-                            Intent intent = new Intent(getActivity(), BeginActivity.class);
-                            intent.putExtra("message", "Phiên làm việc hết hạn \nVui lòng đăng nhập lại");
-                            startActivity(intent);
-                            getActivity().finish();
-                        }
-
                         if (response.isSuccessful() && response.code() == 200) {
                             viewSucc(mTvTongTien, response.body().getMessage());
                             mGioHang.remove(position);
                             mGioHangRecyclerViewAdapter.notifyDataSetChanged();
                             mTvTongTien.setText("" + Number.convertNumber(mGioHangRecyclerViewAdapter.getTongTien()));
+                            if (mGioHang.size() == 0) {
+                                viewNullGioHang("Chưa có món ăn trong giỏ hàng");
+                            }
                             mAlertDialog.dismiss();
                         }
                         if (response.code() == 400) {
