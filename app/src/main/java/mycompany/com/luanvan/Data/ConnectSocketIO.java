@@ -6,6 +6,7 @@ import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
@@ -77,7 +78,9 @@ public class ConnectSocketIO {
             @Override
             public void call(Object... args) {
                 notificationManager.notify(NOTIFI_ID, mBuilder.build());
-                mThanhToanInterface.reloadDataServer();
+                if (null != mThanhToanInterface) {
+                    mThanhToanInterface.reloadDataServer();
+                }
             }
         });
 
@@ -91,7 +94,10 @@ public class ConnectSocketIO {
         mSocket.on(SOCKET_DA_THANH_TOAN + mSTTBA, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                mThanhToanInterface.reloadDataServer();
+                if (null != mThanhToanInterface) {
+                    mThanhToanInterface.reloadDataServer();
+                }
+
             }
         });
 
@@ -104,14 +110,17 @@ public class ConnectSocketIO {
                 try {
                     String msg = obj.getString("msg");
                     Log.e(TAG, "SOCKET_NOTIFICATION: " + msg);
-                    mThanhToanInterface.viewErrorSocket(msg);
+                    if (null != mThanhToanInterface) {
+                        mThanhToanInterface.viewErrorSocket(msg);
+                    }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         });
 
-
+        Toast.makeText(context, "Đã kết nối Socket.IO thành công", Toast.LENGTH_SHORT).show();
         mSocket.emit(STATIC_CHANGE, data);
 
 

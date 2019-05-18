@@ -216,7 +216,7 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
                 if (response.isSuccessful() && response.code() == 400) {
 
                     viewError(response.errorBody().toString());
-                } else if (null != response.body()) {//Yêu cầu đặt hàng thành công
+                } else if (null != response.body() && response.code() == 200) {//Yêu cầu đặt hàng thành công
 
                     mGoiMonList.clear(); //Xóa các dữ liệu trong giỏ hàng
 
