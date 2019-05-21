@@ -115,8 +115,10 @@ public class GoiMonFrag extends Fragment implements GioHangRecyclerViewAdapter.o
 
     private void viewNullGioHang(String string) {
 
-        mTvAlert.setText(string);
-        if (!mTvAlert.isEnabled()) {
+//        mRecyclerView.setVisibility(View.GONE);
+
+        if (mTvAlert != null) {
+            mTvAlert.setText(string);
             mTvAlert.setVisibility(View.VISIBLE);
         }
 

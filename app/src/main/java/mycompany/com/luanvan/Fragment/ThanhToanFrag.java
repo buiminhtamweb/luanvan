@@ -1,5 +1,6 @@
 package mycompany.com.luanvan.Fragment;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -51,6 +53,7 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
     private AlertDialog mAlertDialog;
     private TextView mTvSoBan;
     private TextView mTvTongCong;
+    private ProgressDialog progress;
 
     private int mSttBanAn;
     private FloatingActionButton mFAB;
@@ -78,30 +81,33 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
         mRecyDSGoiMon.setLayoutManager(layoutManager);
 
         //Gọi thanh toán
+        ConnectSocketIO.getInstance(getContext()).setmThanhToanInterface(this);
         mReViewCall.setVisibility(View.GONE);
         mFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                ConnectSocketIO.getInstance(getContext()).sendData(TABLE_CALL, CALL, true);
-                mFAB.setEnabled(false);
-                mReViewCall.setVisibility(View.VISIBLE);
+                if (!ConnectSocketIO.getInstance(getContext()).sendData(TABLE_CALL, CALL, true)) { //Succes is true
+                    mFAB.setEnabled(false);
+                    mReViewCall.setVisibility(View.VISIBLE);
 
-                new CountDownTimer(5000, 1000) {
-                    String textShowCalling = "Đang gọi";
+                    new CountDownTimer(5000, 1000) {
+                        String textShowCalling = "Đang gọi";
 
-                    public void onTick(long millisUntilFinished) {
-                        textShowCalling += ".";
-                        mTvCall.setText(textShowCalling);
-                    }
+                        public void onTick(long millisUntilFinished) {
+                            textShowCalling += ".";
+                            mTvCall.setText(textShowCalling);
+                        }
 
-                    public void onFinish() {
-                        mTvCall.setText("");
-                        mReViewCall.setVisibility(View.GONE);
-                        mFAB.setEnabled(true);
-                        viewSucc(mReViewCall, "Đã gọi thanh toán! Xin quí khách chờ trong vài giây");
-                    }
-                }.start();
+                        public void onFinish() {
+                            mTvCall.setText("");
+                            mReViewCall.setVisibility(View.GONE);
+                            mFAB.setEnabled(true);
+                            viewSucc(mReViewCall, "Đã gọi thanh toán! Xin quí khách chờ trong vài giây");
+                        }
+                    }.start();
+                }
+
 
             }
         });
@@ -119,9 +125,10 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
             }
         });
 
+
         getDataFromServer();
 
-        ConnectSocketIO.getInstance(getContext()).setmThanhToanInterface(this);
+
 
         return view;
     }
@@ -170,7 +177,7 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
         ConnectServer.getInstance(getActivity()).getApi().layChiTietGoiMon(idGoiMon, mSttBanAn).enqueue(new Callback<GoiMonDetail>() {
             @Override
             public void onResponse(Call<GoiMonDetail> call, Response<GoiMonDetail> response) {
-                if (response.isSuccessful() && response.code() == 400) {
+                if (response.code() == 400) {
 
                     viewError(response.errorBody().toString());
                 } else {//Yêu cầu đặt hàng thành công
@@ -210,12 +217,32 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
     }
 
     private void getDataFromServer() {
-        ConnectServer.getInstance(getActivity()).getApi().layDSGoiMon(mSttBanAn).enqueue(new Callback<List<GoiMon>>() {
+        if (getContext() != null) {
+            progress = new ProgressDialog(getContext());
+            progress.setMessage("Đang tải dữ liệu. Vui lòng chờ !");
+            progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//            progress.setIndeterminate(true);
+            progress.show();
+        }
+
+        ConnectServer.getInstance(getContext()).getApi().layDSGoiMon(mSttBanAn).enqueue(new Callback<List<GoiMon>>() {
             @Override
             public void onResponse(Call<List<GoiMon>> call, Response<List<GoiMon>> response) {
-                if (response.isSuccessful() && response.code() == 400) {
+//                if (null != progress && progress.isShowing()) {
+//                    progress.dismiss();
+//                }
+                mGoiMonRecyclerViewAdapter.notifyDataSetChanged();
+                if (response.code() == 400) {
 
-                    viewError(response.errorBody().toString());
+                    try {
+                        viewError(response.errorBody().string());
+                        if (null != progress && progress.isShowing()) {
+                            progress.dismiss();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                 } else if (null != response.body() && response.code() == 200) {//Yêu cầu đặt hàng thành công
 
                     mGoiMonList.clear(); //Xóa các dữ liệu trong giỏ hàng
@@ -225,10 +252,13 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
                         Log.e(TAG, "onResponse: " + mg.getId());
                         if (mg.getId() != null) mGoiMonList.add(mg);
                     }
-                    mGoiMonRecyclerViewAdapter.notifyDataSetChanged();
+
+//                    mGoiMonRecyclerViewAdapter.notifyDataSetChanged();
                     mTvTongCong.setText("" + Number.convertNumber(mGoiMonRecyclerViewAdapter.getTongCong()) + " VND");
-
-
+                    mGoiMonRecyclerViewAdapter.notifyDataSetChanged();
+                    if (null != progress && progress.isShowing()) {
+                        progress.dismiss();
+                    }
                 }
             }
 
@@ -286,24 +316,24 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
 
 
     private void viewError(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Cảnh báo");
-        builder.setMessage(message);
-        builder.setCancelable(false);
-        builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        mAlertDialog = builder.create();
-        mAlertDialog.show();
+        if (mTvSoBan != null) {
+            final Snackbar snackbar = Snackbar.make(mTvSoBan, message, Snackbar.LENGTH_SHORT);
+//            // Set an action on it, and a handler
+//            snackbar.setAction("Thử lại", new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    mGoiMonList.clear();
+//                    getDataFromServer();
+//                }
+//            });
+            snackbar.show();
+        }
     }
 
 
     public void showErrDisconnect(View view) {
         // Create snackbar
-        if (view.isShown()) {
+        if (view != null) {
             final Snackbar snackbar = Snackbar.make(view, "Mất kết nối đến máy chủ", Snackbar.LENGTH_INDEFINITE);
 
             // Set an action on it, and a handler

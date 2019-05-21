@@ -170,7 +170,7 @@ public class ConnectSocketIO {
 
     }
 
-    public void sendData(String event, String key, boolean value) {
+    public boolean sendData(String event, String key, boolean value) {
         Log.e(TAG, "IO->sendData: " + event);
         JSONObject jsonObject = new JSONObject();
         try {
@@ -181,7 +181,8 @@ public class ConnectSocketIO {
         }
         if (mSocket.connected()) {
             mSocket.emit(event, jsonObject);
-        }
+            return true;
+        } else return false;
     }
 
     public void sendData(String event, String key, int value) {

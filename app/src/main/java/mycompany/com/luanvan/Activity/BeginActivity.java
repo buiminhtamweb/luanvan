@@ -65,6 +65,7 @@ public class BeginActivity extends AppCompatActivity {
         Log.e("LOGIN", "onStart: " + soban);
         if (soban != 0) {
 //            startActivity(new Intent(this, MainActivity.class));
+            mEdtSoBan.setText("" + soban);
             checkDataFromServer(soban);
         }
 
@@ -125,6 +126,7 @@ public class BeginActivity extends AppCompatActivity {
                     SharedPreferencesHandler.writeInt(mContext, Constant.SO_BAN, sttBA);
 
                     startActivity(new Intent(BeginActivity.this, MainActivity.class));
+                    finish();
                 }
             }
 
