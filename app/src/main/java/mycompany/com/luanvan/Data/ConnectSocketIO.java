@@ -180,7 +180,9 @@ public class ConnectSocketIO {
             e.printStackTrace();
         }
         if (mSocket.connected()) {
-            mSocket.emit(event, jsonObject);
+
+            Emitter emitter = mSocket.emit(event, jsonObject);
+
             return true;
         } else return false;
     }

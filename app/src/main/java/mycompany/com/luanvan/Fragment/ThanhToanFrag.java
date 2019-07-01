@@ -87,26 +87,7 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
             @Override
             public void onClick(View view) {
 
-                if (!ConnectSocketIO.getInstance(getContext()).sendData(TABLE_CALL, CALL, true)) { //Succes is true
-                    mFAB.setEnabled(false);
-                    mReViewCall.setVisibility(View.VISIBLE);
-
-                    new CountDownTimer(5000, 1000) {
-                        String textShowCalling = "Đang gọi";
-
-                        public void onTick(long millisUntilFinished) {
-                            textShowCalling += ".";
-                            mTvCall.setText(textShowCalling);
-                        }
-
-                        public void onFinish() {
-                            mTvCall.setText("");
-                            mReViewCall.setVisibility(View.GONE);
-                            mFAB.setEnabled(true);
-                            viewSucc(mReViewCall, "Đã gọi thanh toán! Xin quí khách chờ trong vài giây");
-                        }
-                    }.start();
-                }
+                callSocket();
 
 
             }
@@ -131,6 +112,33 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
 
 
         return view;
+    }
+
+    private boolean callSocket() {
+        if (!ConnectSocketIO.getInstance(getContext()).sendData(TABLE_CALL, CALL, true)) { //Succes is true
+            mFAB.setEnabled(false);
+            mReViewCall.setVisibility(View.VISIBLE);
+
+            new CountDownTimer(5000, 1000) {
+                String textShowCalling = "Đang gọi";
+
+                public void onTick(long millisUntilFinished) {
+                    textShowCalling += ".";
+                    mTvCall.setText(textShowCalling);
+                }
+
+                public void onFinish() {
+                    mTvCall.setText("");
+                    mReViewCall.setVisibility(View.GONE);
+                    mFAB.setEnabled(true);
+                    viewSucc(mReViewCall, "Đã gọi thanh toán! Xin quí khách chờ trong vài giây");
+                }
+            }.start();
+            return true;
+        } else {
+            callSocket(); //Đệ quy, tiếp tục gọi lại;
+            return false;
+        }
     }
 
 
@@ -217,13 +225,13 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
     }
 
     private void getDataFromServer() {
-        if (getContext() != null) {
-            progress = new ProgressDialog(getContext());
-            progress.setMessage("Đang tải dữ liệu. Vui lòng chờ !");
-            progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//        if (getContext() != null) {
+//            progress = new ProgressDialog(getContext());
+//            progress.setMessage("Đang tải dữ liệu. Vui lòng chờ !");
+//            progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 //            progress.setIndeterminate(true);
-            progress.show();
-        }
+//            progress.show();
+//        }
 
         ConnectServer.getInstance(getContext()).getApi().layDSGoiMon(mSttBanAn).enqueue(new Callback<List<GoiMon>>() {
             @Override
@@ -236,9 +244,9 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
 
                     try {
                         viewError(response.errorBody().string());
-                        if (null != progress && progress.isShowing()) {
-                            progress.dismiss();
-                        }
+//                        if (null != progress && progress.isShowing()) {
+//                            progress.dismiss();
+//                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -256,9 +264,9 @@ public class ThanhToanFrag extends Fragment implements ThanhToanInterface {
 //                    mGoiMonRecyclerViewAdapter.notifyDataSetChanged();
                     mTvTongCong.setText("" + Number.convertNumber(mGoiMonRecyclerViewAdapter.getTongCong()) + " VND");
                     mGoiMonRecyclerViewAdapter.notifyDataSetChanged();
-                    if (null != progress && progress.isShowing()) {
-                        progress.dismiss();
-                    }
+//                    if (null != progress && progress.isShowing()) {
+//                        progress.dismiss();
+//                    }
                 }
             }
 
